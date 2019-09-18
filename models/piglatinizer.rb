@@ -1,42 +1,38 @@
 class PigLatinizer
-    attr_reader :text
+    attr_reader :text, :converted_text
 
     def initialize(text)
         @text = text.downcase.split(" ")
+        @converted_text = convert()
     end
 
-    def is_vowel?(str)
-        str.include?(/[aeoui]/)
+    def is_vowel?(char)  
+        ['a','e','o','u','i'].include?(char)
     end
-
-    #Examples:
-    # "noodle soup" becomes "oodlenay oupsay" 
-    # "big apple" becomes "igbay appleway" (note the added "w" in "appleway")
+      
     def convert()
-        #.find(/[bcdfghjklmnpqrstvwxyz]/)
-        # if first char == vowel
-            # add 'way' to end of word
-            #break
-        # else
-            #loop through word until you hit a vowel and chop off leading consonants, then append with 'ay'
-
+        new_word_arr = []
         @text.each do |word|
             new_word = ""
             append = ""
-            word.each do |char, index|
+            word_arr = word.split('')
+            word_arr.each_with_index do |char, index|
                 if index == 0 && is_vowel?(char)
-                    new_word = (word + "way")
+                    new_word = (word_arr << "way")
+                    new_word = new_word.join()
                     break
                 elsif index > 0 && is_vowel?(char)
-                    new_word = (word + append + "ay" )
+                    new_word = (word_arr << ( append + "ay" ))
+                    new_word = new_word.join()
+                    break
                 else 
                     append += char
-                    word[index] = ""
+                    word_arr[index] = ""
                 end
             end
-
-
+            new_word_arr << new_word
         end
-
+        new_word_arr.join(" ")
     end
+
 end
